@@ -1,0 +1,99 @@
+package com.kriba.xmlparsers.dom;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+//import javax.swing.text.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileInputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
+
+public class DOMParser {
+
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+
+	DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+	
+	/*
+	//Constructor 1 - parse(InputSource is)
+    FileInputStream fis = new FileInputStream("DriversLicense.xml");
+    InputSource is = new InputSource(fis);
+    Document document = documentBuilder.parse(is);
+    */
+	
+	/*
+	//Constructor 2 - parse(File file)
+	File file = new File("DriversLicense.xml");
+	Document document = documentBuilder.parse(file);
+	*/
+	
+	/*
+	//Constructor 3 - parse(FileInputStream fis); 
+    FileInputStream fis = new FileInputStream("DriversLicense.xml");
+	Document document = documentBuilder.parse(fis); 
+	*/
+	
+	/*
+	//Constructor 4 - 
+	Document document = documentBuilder.parse("DriversLicense.xml");
+	*/
+	
+	Document document = documentBuilder.parse("DriversLicense.xml");
+	
+	//Everything in DOM is a Node - depthFirst approach 
+	NodeList nodeList = document.getElementsByTagName("Number");
+	Node numberItem = nodeList.item(0);
+	String textContent = numberItem.getTextContent();
+	System.out.println(textContent);
+	
+	//print attribute of root element - heirarcal approach
+	Element documentElement = document.getDocumentElement();
+	String attribute = documentElement.getAttribute("status");
+	System.out.println(attribute);
+	
+	//print multiple attributes
+	NodeList VehicleTypeNodeList = document.getElementsByTagName("VehicleType");
+	Node VehicleTypeNode = VehicleTypeNodeList.item(0);
+	NamedNodeMap attributes = VehicleTypeNode.getAttributes();
+	
+	for(int i=0;i<attributes.getLength();i++){
+		System.out.println(attributes.item(i).getNodeName()+":"+attributes.item(i).getNodeValue());
+	}
+	
+	//hierarchical parsing
+	NodeList addressNodeList = document.getElementsByTagName("Address");
+	Node addressNode = addressNodeList.item(0);
+	
+	NodeList addressChildren = addressNode.getChildNodes();
+	
+	for(int j=0;j<addressChildren.getLength();j++){
+		Node item = addressChildren.item(0);
+		
+		if (item instanceof Element) {
+
+			switch (item.getNodeName()) {
+			case "street":
+				System.out.println(item.getTextContent());
+				break;
+			}
+		}
+		
+	}
+	
+	
+	}
+
+}
